@@ -1,0 +1,216 @@
+---
+app-id: "org.clementine_player.clementine"
+branch: qt5
+runtime: org.kde.Platform
+runtime-version: 5.11
+sdk: org.kde.Sdk
+command: "clementine"
+finish-args:
+- "--filesystem=home"
+- "--filesystem=xdg-music:create"
+- "--filesystem=host:ro"
+- "--socket=pulseaudio"
+- "--socket=x11"
+- "--socket=wayland"
+- "--share=network"
+- "--share=ipc"
+- "--device=dri"
+- "--own-name=org.mpris.MediaPlayer2.clementine"
+- "--talk-name=org.mpris.MediaPlayer2.Player"
+- "--talk-name=org.freedesktop.Notifications"
+- "--system-talk-name=org.freedesktop.UDisks2"
+- "--talk-name=org.kde.StatusNotifierWatcher"
+- "--system-talk-name=org.mpris.MediaPlayer2"
+- "--system-talk-name=org.freedesktop.Avahi"
+- "--talk-name=org.wiimotedev.deviceEvents"
+rename-icon: "clementine"
+rename-desktop-file: "clementine.desktop"
+rename-appdata-file: "clementine.appdata.xml"
+modules:    
+- name: "boost-headers"
+  buildsystem: simple
+  cleanup:
+  - "/include"
+  build-commands:
+  - "mkdir -p /app/include"
+  - "cp -r ./boost /app/include/boost"
+  sources:
+  - type: archive
+    url: "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz"
+    sha256: 9a2c2819310839ea373f42d69e733c339b4e9a19deab6bfec448281554aa4dbb
+- name: "libmtp"
+  buildsystem: autotools
+  config-opts: 
+  - "--disable-static"
+  - "--with-udev=/app/lib/udev"
+  sources: 
+  - type: archive
+    url: "http://distcache.freebsd.org/ports-distfiles/libmtp-1.1.16.tar.gz"
+    sha256: 5b68f9dd1ed38de558de687f40e255a39e4d5e32ef3de601f0ac19dd5682bba0
+  cleanup:
+  - "/bin"
+  - "/include"
+  - "/lib/pkgconfig"
+  - "/lib/*.la"
+  modules:
+  - name: "libusb"
+    buildsystem: autotools
+    config-opts:
+    - "--disable-static"
+    cleanup:
+    - "/include"
+    - "/lib/*.la"
+    - "/lib/pkgconfig"
+    - "/share"
+    - "/etc"
+    sources:
+    - type: git
+      url: "https://github.com/libusb/libusb.git"
+      tag: v1.0.22
+      commit: 0034b2afdcdb1614e78edaa2a9e22d5936aeae5d
+    modules:
+    - "flathub-shared-modules/udev/udev-175.json"
+- name: "protobuf"
+  buildsystem: autotools
+  config-opts:
+  - "--disable-static"
+  sources:
+  - type: archive
+    url: "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
+    sha256: b3732e471a9bb7950f090fd0457ebd2536a9ba0891b7f3785919c654fe2a2529
+  cleanup:
+  - "/include"
+  - "/lib/pkgconfig"
+  - "/lib/*.la"
+  - "/bin"
+- name: "fftw3f"
+  buildsystem: cmake-ninja
+  config-opts:
+  - "-DENABLE_FLOAT=ON"
+  - "-DENABLE_SSE2=ON"
+  sources:
+  - type: archive
+    url: "http://fftw.org/fftw-3.3.8.tar.gz"
+    sha256: 6113262f6e92c5bd474f2875fa1b01054c4ad5040f6b0da7c03c98821d9ae303
+  cleanup:
+  - "/include"
+  - "/lib/pkgconfig"
+  - "/lib/cmake"
+- name: "fftw3"
+  buildsystem: cmake-ninja
+  config-opts:
+  - "-DENABLE_SSE2=ON"
+  sources:
+  - type: archive
+    url: "http://fftw.org/fftw-3.3.8.tar.gz"
+    sha256: 6113262f6e92c5bd474f2875fa1b01054c4ad5040f6b0da7c03c98821d9ae303
+  cleanup:
+  - "/include"
+  - "/lib/pkgconfig"
+  - "/lib/cmake"
+- name: "libchromaprint"
+  buildsystem: cmake-ninja
+  sources:
+  - type: git
+    url: "https://github.com/acoustid/chromaprint.git"
+    tag: "v1.4.3"
+    commit: ecd2edd73315530d4f9c1b1186aee24c63a7b6c2
+  cleanup:
+  - "/include"
+  - "/lib/pkgconfig"
+- "flathub-shared-modules/glu/glu-9.0.0.json"
+- "flathub-shared-modules/glew/glew.json"
+- name: "crypto++"
+  buildsystem: autotools
+  no-autogen: true
+  make-args:
+  - "static"
+  - "libcryptopp.pc"
+  - "PREFIX=/app"
+  make-install-args:
+  - "PREFIX=/app"
+  sources:
+  - type: git
+    url: "https://github.com/weidai11/cryptopp.git"
+    tag: "CRYPTOPP_8_0_0"
+    commit: 5e5fb6c855e0f0232065079ab96414ce1a78c411
+  cleanup:
+  - "/bin"
+  - "/include"
+  - "/lib"
+  - "/share"
+- name: "libcdio"
+  buildsystem: autotools
+  config-opts:
+  # I took these from fedora's SRPM
+  - "--disable-vcd-info"
+  - "--disable-dependency-tracking"
+  - "--disable-cddb"
+  - "--disable-static"
+  - "--disable-rpath"
+  sources:
+  - type: archive
+    url: "https://ftp.gnu.org/gnu/libcdio/libcdio-2.0.0.tar.gz"
+    sha256: 1b481b5da009bea31db875805665974e2fc568e2b2afa516f4036733657cf958
+  cleanup:
+  - "/include"
+  - "/lib/*.la"
+  - "/lib/pkgconfig"
+  - "/bin"
+  - "/share"
+- name: "taglib"
+  buildsystem: cmake-ninja
+  sources:
+  - type: archive
+    url: "http://taglib.org/releases/taglib-1.11.1.tar.gz"
+    sha256: b6d1a5a610aae6ff39d93de5efd0fdc787aa9e9dc1e7026fa4c961b26563526b
+  cleanup:
+  - "/bin"
+  - "/include"
+  - "/lib"
+- name: "sparsehash"
+  buildsystem: autotools
+  sources:
+  - type: git
+    url: "https://github.com/sparsehash/sparsehash.git"
+    commit: 4cb924025b8c622d1a1e11f4c1e9db15410c75fb
+  cleanup:
+  - "/include"
+  - "/lib/pkgconfig"
+  - "/share"
+- name: "qjson"
+  buildsystem: cmake-ninja
+  config-opts:
+  - "-DQT4_BUILD=OFF"
+  sources:
+  - type: git
+    url: "https://github.com/flavio/qjson.git"
+    tag: "0.9.0"
+    commit: eee8a1626f18499a95a5216dd1832f45c15a46ba
+  cleanup:
+  - "/include"
+  - "/lib/pkgconfig"
+  - "/lib/cmake"
+- name: "liblastfm"
+  buildsystem: cmake-ninja
+  config-opts:
+  - "-DBUILD_TESTS=OFF"
+  - "-DBUILD_WITH_QT4=OFF"
+  sources:
+  - type: git
+    url: "https://github.com/lastfm/liblastfm.git"
+    commit: 73cd7ea746103570b8226bc4f6f20fe7ce0aacf7
+  cleanup:
+  - "/include"
+- name: "clementine-qt5"
+  buildsystem: cmake-ninja
+  builddir: true
+  config-opts:
+  - "-DSQLITE_INCLUDE_DIRS=/usr/include"
+  - "-DSQLITE_LIBRARIES=/usr/lib/libsqlite3.so"
+  sources:
+  - type: git
+    url: "https://github.com/clementine-player/Clementine.git"
+    commit: 6d50e0b041810ee65b1ad10efeb51651e1e5ff89
+  - type: patch
+    path: "cryptopp-pc-name.patch"
