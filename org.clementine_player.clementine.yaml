@@ -36,8 +36,8 @@ modules:
   - "cp -r ./boost /app/include/boost"
   sources:
   - type: archive
-    url: "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz"
-    sha256: 9a2c2819310839ea373f42d69e733c339b4e9a19deab6bfec448281554aa4dbb
+    url: "https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz"
+    sha256: 882b48708d211a5f48e60b0124cf5863c1534cd544ecd0664bb534a4b5d506e9
 - name: "libmtp"
   buildsystem: autotools
   config-opts: 
@@ -76,7 +76,6 @@ modules:
   - "--disable-static"
   sources:
   - type: archive
-    #url: "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
     url: "https://github.com/protocolbuffers/protobuf/releases/download/v3.7.0/protobuf-cpp-3.7.0.tar.gz"
     sha256: 797e759e6daf644be4c09070d4777d178b538dca310cc4956fde4b51b02ba2d3
   cleanup:
@@ -114,9 +113,7 @@ modules:
   sources:
   - type: git
     url: "https://github.com/acoustid/chromaprint.git"
-    #tag: "v1.4.3"
-    #commit: ecd2edd73315530d4f9c1b1186aee24c63a7b6c2
-    commit: 64e6eee76365d1995cd4f9eb763641fc369e397c
+    commit: ecc8bc291f4efd5e61722bb0f701fca6c7451293
   cleanup:
   - "/include"
   - "/lib/pkgconfig"
@@ -188,9 +185,7 @@ modules:
   sources:
   - type: git
     url: "https://github.com/flavio/qjson.git"
-    #tag: "0.9.0"
-    #commit: eee8a1626f18499a95a5216dd1832f45c15a46ba
-    commit: 48a84889dd0520e7f6717c2ce09b0d9b0fb5aaed
+    commit: 4920592171ccf83029f004880ad02aa34a60c0ab
   cleanup:
   - "/include"
   - "/lib/pkgconfig"
@@ -227,6 +222,5 @@ modules:
   - type: git
     url: "https://github.com/clementine-player/Clementine.git"
     commit: 36cc5b82f4daf5c2d4e93dc8072665e5a3ca622b
-    #commit: 6d50e0b041810ee65b1ad10efeb51651e1e5ff89
   - type: patch
     path: "cryptopp-pkg-name.patch"
