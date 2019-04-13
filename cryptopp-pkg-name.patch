@@ -1,0 +1,6 @@
+diff -u0 a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt    2019-03-11 18:00:50.807324970 -0600
++++ b/CMakeLists.txt    2019-03-11 18:01:09.437002203 -0600
+@@ -60 +60 @@
+-pkg_search_module(CRYPTOPP cryptopp libcrypto++)
++pkg_search_module(CRYPTOPP libcryptopp)

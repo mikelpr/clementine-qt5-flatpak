@@ -2,7 +2,7 @@
 app-id: "org.clementine_player.clementine"
 branch: qt5
 runtime: org.kde.Platform
-runtime-version: 5.11
+runtime-version: "5.11"
 sdk: org.kde.Sdk
 command: "clementine"
 finish-args:
@@ -76,8 +76,9 @@ modules:
   - "--disable-static"
   sources:
   - type: archive
-    url: "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
-    sha256: b3732e471a9bb7950f090fd0457ebd2536a9ba0891b7f3785919c654fe2a2529
+    #url: "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
+    url: "https://github.com/protocolbuffers/protobuf/releases/download/v3.7.0/protobuf-cpp-3.7.0.tar.gz"
+    sha256: 797e759e6daf644be4c09070d4777d178b538dca310cc4956fde4b51b02ba2d3
   cleanup:
   - "/include"
   - "/lib/pkgconfig"
@@ -113,8 +114,9 @@ modules:
   sources:
   - type: git
     url: "https://github.com/acoustid/chromaprint.git"
-    tag: "v1.4.3"
-    commit: ecd2edd73315530d4f9c1b1186aee24c63a7b6c2
+    #tag: "v1.4.3"
+    #commit: ecd2edd73315530d4f9c1b1186aee24c63a7b6c2
+    commit: 64e6eee76365d1995cd4f9eb763641fc369e397c
   cleanup:
   - "/include"
   - "/lib/pkgconfig"
@@ -132,8 +134,8 @@ modules:
   sources:
   - type: git
     url: "https://github.com/weidai11/cryptopp.git"
-    tag: "CRYPTOPP_8_0_0"
-    commit: 5e5fb6c855e0f0232065079ab96414ce1a78c411
+    tag: "CRYPTOPP_8_1_0"
+    commit: 1c34979592f7d5e5d73e265a9c8650cc006620d2
   cleanup:
   - "/bin"
   - "/include"
@@ -142,12 +144,13 @@ modules:
 - name: "libcdio"
   buildsystem: autotools
   config-opts:
-  # I took these from fedora's SRPM
+  # took these from fedora's SRPM
   - "--disable-vcd-info"
   - "--disable-dependency-tracking"
   - "--disable-cddb"
   - "--disable-static"
   - "--disable-rpath"
+  - "--without-cdda-player"
   sources:
   - type: archive
     url: "https://ftp.gnu.org/gnu/libcdio/libcdio-2.0.0.tar.gz"
@@ -185,8 +188,9 @@ modules:
   sources:
   - type: git
     url: "https://github.com/flavio/qjson.git"
-    tag: "0.9.0"
-    commit: eee8a1626f18499a95a5216dd1832f45c15a46ba
+    #tag: "0.9.0"
+    #commit: eee8a1626f18499a95a5216dd1832f45c15a46ba
+    commit: 48a84889dd0520e7f6717c2ce09b0d9b0fb5aaed
   cleanup:
   - "/include"
   - "/lib/pkgconfig"
@@ -202,15 +206,27 @@ modules:
     commit: 73cd7ea746103570b8226bc4f6f20fe7ce0aacf7
   cleanup:
   - "/include"
+#- name: "sqlite3" # used to be included in org.kde.Sdk//5.11 but not present in 5.12
+  #buildsystem: autotools
+  #sources:
+  #- type: archive
+  #  url: "https://sqlite.org/2019/sqlite-autoconf-3270200.tar.gz"
+  #  sha256: 50c39e85ea28b5ecfdb3f9e860afe9ba606381e21836b2849efca6a0bfe6ef6e
+  #cleanup:
+  #- "/include"
+  #- "/lib"
+  #- "/share"
+  #- "/bin"
 - name: "clementine-qt5"
   buildsystem: cmake-ninja
   builddir: true
   config-opts:
   - "-DSQLITE_INCLUDE_DIRS=/usr/include"
-  - "-DSQLITE_LIBRARIES=/usr/lib/libsqlite3.so"
+  - "-DSQLITE_LIBRARIES=/usr/lib/libsqlite3.so" # only available on 5.11
   sources:
   - type: git
     url: "https://github.com/clementine-player/Clementine.git"
-    commit: 6d50e0b041810ee65b1ad10efeb51651e1e5ff89
+    commit: 36cc5b82f4daf5c2d4e93dc8072665e5a3ca622b
+    #commit: 6d50e0b041810ee65b1ad10efeb51651e1e5ff89
   - type: patch
-    path: "cryptopp-pc-name.patch"
+    path: "cryptopp-pkg-name.patch"
